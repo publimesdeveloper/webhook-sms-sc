@@ -17,7 +17,9 @@ export class WebhookApiOutDto {
         message:string
 
         statusId:string
+
         transactionIdClient:string
+        
         transactionIdMplus:string
 
        
