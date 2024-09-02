@@ -19,7 +19,7 @@ export class WebhookApiService {
 
   
   async saveIn(WebhookApiInDto: WebhookApiInDto) {
-    console.log(WebhookApiInDto);
+    //console.log(WebhookApiInDto);
     try {
       const webhookIn =  this.WebhookIn.create({
         ...WebhookApiInDto
@@ -37,7 +37,7 @@ export class WebhookApiService {
   }
 
   async saveOut(WebhookApiOutDto: WebhookApiOutDto) {
-   console.log(WebhookApiOutDto)
+   //console.log(WebhookApiOutDto)
    try {
     const webhookOut =  this.WebhookOut.create({
       ...WebhookApiOutDto

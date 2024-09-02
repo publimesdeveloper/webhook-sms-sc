@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 @Entity({ name: 'webhookIn'})
 export class WebhookIn {
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: string
 
     @Column('text')

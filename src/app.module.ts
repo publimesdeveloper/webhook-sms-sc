@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WebhookApiModule } from './webhook-api/webhook-api.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 
@@ -10,17 +10,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     WebhookApiModule,
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      database: process.env.DB_NAME,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      autoLoadEntities: true,
-      synchronize : true // en produccion no es buena idea , si borras algo del modelo se borra en produccion
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mssql',
+        host: process.env.DB_HOST,  
+        port: +process.env.DB_PORT ,           
+        username:  process.env.DB_USERNAME,       
+        password: process.env.DB_PASSWORD, 
+        database:  process.env.DB_NAME,   
+        synchronize: false,  
+        autoLoadEntities: true,
+        options: {
+          encrypt: true,
+          trustServerCertificate: true,
+        },
+        requestTimeout: 240000,  // Tiempo de espera en milisegundos
+      }),
     }),
-
   ],
   controllers: [AppController],
   providers: [AppService],

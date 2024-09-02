@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @Entity({name: 'webhookOut'})
 export class WebhookOut {
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: string
 
     @Column('text')
