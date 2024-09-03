@@ -25,34 +25,6 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-          
-
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: release.zip
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -60,7 +32,7 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6FAC4F759929499181320DDE06161BA3 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2626A3CCCD584E9CBAEECBAFD91CA30B }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_0269B1423D4C4FD0AA372E4D14726F16 }}
-
+      
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
