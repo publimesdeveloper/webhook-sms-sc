@@ -1,25 +1,25 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - webhook-sms-publimes
+name: Build and deploy Node.js app to Azure Web App - portal-web-api
 
 on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'README.md'
+      - '.husky'
+      - '.github/**'
+      - '**/*.csv'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       - name: Set up Node.js version
         uses: actions/setup-node@v1
@@ -28,21 +28,15 @@ jobs:
 
       - name: npm install, build, and test
         run: |
+          npm install -g @nestjs/cli
           npm install
           npm run build --if-present
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6FAC4F759929499181320DDE06161BA3 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2626A3CCCD584E9CBAEECBAFD91CA30B }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_0269B1423D4C4FD0AA372E4D14726F16 }}
-      
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'webhook-sms-publimes'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2A155FC6DB96408490A28602DEE7B113 }}
           package: .
-          
